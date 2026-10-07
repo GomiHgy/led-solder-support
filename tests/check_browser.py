@@ -15,7 +15,8 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
-LANGUAGES = ('ja', 'en', 'zh-CN')
+LOCALES = json.loads((ROOT / 'src/locales.json').read_text(encoding='utf-8'))
+LANGUAGES = tuple(locale['code'] for locale in LOCALES)
 
 
 def prompt_context(text: str) -> dict:
@@ -35,7 +36,7 @@ def main() -> None:
     args = parser.parse_args()
     html = (ROOT / 'index.html').read_text(encoding='utf-8')
     prompts = {lang: (ROOT / f'prompts/led_solder_review_{lang}.txt').read_text(encoding='utf-8').strip() for lang in LANGUAGES}
-    translations = json.loads((ROOT / 'src/translations.json').read_text(encoding='utf-8'))
+    translations = {lang: json.loads((ROOT / f'src/translations/{lang}.json').read_text(encoding='utf-8')) for lang in LANGUAGES[1:]}
 
     def translated(key: str, language: str) -> str:
         return key if language == 'ja' else translations[language][key]
@@ -109,7 +110,7 @@ def main() -> None:
                     page.screenshot(path=str(args.screenshots / f'desktop-{language}-dark.png'))
                     page.set_viewport_size({'width': 390, 'height': 844})
                     page.screenshot(path=str(args.screenshots / f'mobile-{language}-dark.png'))
-        reports.append('Three languages translate title, metadata, labels, placeholders, and prompts; no overflow in all 63 language/theme/width combinations')
+        reports.append(f'All {len(LANGUAGES)} locales translate title, metadata, labels, placeholders, and prompts; no overflow in all {len(LANGUAGES) * 3 * 7} locale/theme/width combinations')
 
         def body_color() -> str:
             return page.evaluate('getComputedStyle(document.body).backgroundColor')
@@ -209,7 +210,7 @@ def main() -> None:
         assert page.evaluate('window.__copiedText') == page.locator('#prompt-output').input_value()
         reports.append('Clipboard API success path (mocked API)')
 
-        for language in ('en', 'zh-CN'):
+        for language in LANGUAGES[1:]:
             page.select_option('#language-select', language)
             page.locator('#copy-btn').click()
             page.wait_for_function("document.getElementById('status').dataset.type === 'success'")

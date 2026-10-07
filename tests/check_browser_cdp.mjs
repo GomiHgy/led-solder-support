@@ -11,7 +11,8 @@ import { fileURLToPath } from 'node:url';
 import { setTimeout as pause } from 'node:timers/promises';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const languages = ['ja', 'en', 'zh-CN'];
+const locales = JSON.parse(await fs.readFile(path.join(ROOT, 'src/locales.json'), 'utf8'));
+const languages = locales.map(locale => locale.code);
 const options = {};
 for (let i = 2; i < process.argv.length; i += 2) {
   assert.ok(['--browser', '--screenshots'].includes(process.argv[i]), 'Unknown command-line option');
@@ -20,9 +21,10 @@ for (let i = 2; i < process.argv.length; i += 2) {
 }
 const artifacts = path.resolve(options.screenshots || path.join(ROOT, 'tests/artifacts/cdp'));
 await fs.mkdir(artifacts, { recursive: true });
-const translations = JSON.parse(await fs.readFile(path.join(ROOT, 'src/translations.json'), 'utf8'));
+const translations = Object.fromEntries(await Promise.all(languages.filter(language => language !== 'ja').map(async language => [language,
+  JSON.parse(await fs.readFile(path.join(ROOT, `src/translations/${language}.json`), 'utf8'))])));
 const prompts = Object.fromEntries(await Promise.all(languages.map(async language => [language,
-  (await fs.readFile(path.join(ROOT, `prompts/led_solder_review_${language}.txt`), 'utf8')).trim()])));
+  (await fs.readFile(path.join(ROOT, `prompts/led_solder_review_${language}.txt`), 'utf8')).replace(/\r\n?/g, '\n').trim()])));
 const html = await fs.readFile(path.join(ROOT, 'index.html'), 'utf8');
 const tr = (key, language) => language === 'ja' ? key : translations[language][key];
 const contextData = text => JSON.parse('{' + text.split('\n{').at(-1));
@@ -120,6 +122,7 @@ try {
   await media('light');
   await browser.load(page);
   assert.deepEqual(await evaluate("[document.getElementById('language-select').value,document.getElementById('theme-select').value]"), ['ja', 'auto']);
+  assert.deepEqual(await evaluate("Array.from(document.getElementById('language-select').options, option => ({code:option.value,name:option.textContent}))"), locales);
   assert.ok(await evaluate("document.querySelector('.brand-logo').complete&&document.querySelector('.brand-logo').naturalWidth>0"));
   const initial = await output();
   assert.ok(initial.length > 7000 && initial.includes('未記入。実際の作業状況は未確認') && initial.includes('このWebページでは確認していません'));
@@ -131,6 +134,7 @@ try {
     await select('language-select', language);
     const state = await evaluate("({lang:document.documentElement.lang,title:document.title,description:document.querySelector('meta[name=description]').content,placeholder:document.getElementById('product').placeholder,label:document.querySelector('label[for=led-type]').textContent,scope:document.querySelector('.scope-note').textContent})");
     assert.equal(state.lang, language);
+    assert.equal(await evaluate("document.getElementById('prompt-language').textContent"), locales.find(locale => locale.code === language).name);
     assert.equal(state.title, tr('LEDテープ はんだ付けサポート | EdelWorks', language));
     assert.equal(state.description, tr(original.description, language));
     assert.equal(state.placeholder, tr(original.placeholder, language));
@@ -145,8 +149,12 @@ try {
         assert.equal(await evaluate('document.documentElement.scrollWidth>innerWidth'), false, `${language}/${theme}/${width}`);
       }
     }
+    await evaluate("window.scrollTo({top:0,behavior:'instant'})");
+    await screenshot(`desktop-${language}-dark.png`);
+    await viewport(390, 844);
+    await screenshot(`mobile-${language}-dark.png`);
   }
-  checks.push('All three localized titles, metadata, labels, placeholders, voltage scopes and prompts; 63 language/theme/viewport combinations without overflow');
+  checks.push(`All ${languages.length} localized titles, metadata, labels, placeholders, voltage scopes and prompts; ${languages.length * 3 * 7} locale/theme/viewport combinations without overflow`);
   await select('theme-select', 'auto');
   await media('light');
   const light = await bodyColor();
@@ -165,15 +173,15 @@ try {
   await viewport(1440, 1000);
   await evaluate("window.scrollTo({top:0,behavior:'instant'})");
   await screenshot('desktop-en-dark.png');
-  await select('language-select', 'zh-CN');
+  await select('language-select', 'zh');
   await viewport(390, 844);
-  await screenshot('mobile-zh-CN-dark.png');
+  await screenshot('mobile-zh-dark.png');
   await select('language-select', 'ja');
   await select('theme-select', 'light');
   await screenshot('mobile-ja-light.png');
   await evaluate("document.getElementById('optional-fields').open=true;document.querySelector('.prompt-panel').scrollIntoView({block:'start',behavior:'instant'})");
   await screenshot('mobile-ja-optional.png');
-  checks.push('OS automatic theme, manual overrides, print light background, five review screenshots');
+  checks.push('OS automatic theme, manual overrides, print light background, desktop/mobile screenshots for every locale');
   for (const type of ['strip', 'ring', 'both', 'unknown']) {
     await select('led-type', type);
     for (const stage of ['unspecified', 'uncovered', 'repaired', 'covered', 'before']) {
@@ -215,7 +223,7 @@ try {
     assert.equal(bytes.toString('utf8').slice(1), text);
     assert.equal(browser.events.slice(eventIndex).find(e => e.method === 'Browser.downloadWillBegin')?.params.suggestedFilename, filename);
   }
-  checks.push('20 LED type/stage combinations, input/selection retention, translated context and notices, safe HTML-like input, three exact real downloads with UTF-8 BOM');
+  checks.push(`20 LED type/stage combinations, input/selection retention, translated context and notices, safe HTML-like input, ${languages.length} exact real downloads with UTF-8 BOM`);
   await evaluate("Object.defineProperty(window,'isSecureContext',{value:true,configurable:true});Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.__copiedText=text}}});");
   for (const language of languages) {
     await select('language-select', language);

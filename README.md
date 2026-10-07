@@ -9,7 +9,21 @@
 
 完成済みの `index.html` をブラウザーで開いてください。外部ライブラリ・外部フォント・サーバー・APIキーは不要です。通常の利用にビルドやPythonは必要ありません。
 
-ヘッダーの「言語」で日本語・英語・中国語（簡体字）を選べます。ガイド、入力欄、操作結果、コピー・保存するAI用プロンプトも選択した言語に切り替わります。切り替えても入力した型番や相談内容、LEDの形・作業状態は保持します。
+ヘッダーの「言語」で次の9ロケールを選べます。ガイド、入力欄、操作結果、コピー・保存するAI用プロンプトも選択した言語に切り替わります。切り替えても入力した型番や相談内容、LEDの形・作業状態は保持します。
+
+| ロケール | 選択欄の表示 | 言語 |
+| --- | --- | --- |
+| `ja` | 日本語 | 日本語 |
+| `en` | English | 英語 |
+| `zh` | 简体中文 | 中国語（簡体字） |
+| `zh-TW` | 繁體中文 | 中国語（台湾繁体字） |
+| `es` | Español | スペイン語 |
+| `de` | Deutsch | ドイツ語 |
+| `fr` | Français | フランス語 |
+| `ko` | 한국어 | 韓国語 |
+| `pt` | Português | ポルトガル語 |
+
+簡体字中国語のロケールコードは、以前の `zh-CN` から `zh` へ統一しています。
 
 「表示テーマ」は自動・ライト・ダークから選べます。自動では端末の配色設定に追従します。印刷時はライト配色になります。言語・テーマの選択は保存せず、ページを開き直すと日本語・自動に戻ります。
 
@@ -24,7 +38,7 @@ AIモデルは画像入力対応のものを使用します。特定のモデル
 
 ## 今回の重要な変更（v1.2）
 
-EdelWorksの提供ロゴ原本を使用し、対象電圧を明記しました。ダークモードと日本語・英語・中国語（簡体字）の切り替えを追加しています。各言語のプロンプトは同じ確認手順・安全ルールを維持し、選択した言語でAIへ返答を依頼します。
+EdelWorksの提供ロゴ原本を使用し、対象電圧を明記しました。ダークモードと9ロケールの切り替えに対応しています。各言語のプロンプトは同じ確認手順・安全ルールを維持し、選択した言語でAIへ返答を依頼します。
 
 熱収縮チューブ・接着剤・樹脂・テープなどで接合部を覆うのは、写真での外観確認と必要な修正のあとです。補強前の写真を接合不良と判定したり、「先にチューブで覆ってから撮影」と誘導したりしないルールを最優先で追加しました。
 
@@ -47,21 +61,28 @@ EdelWorksの提供ロゴ原本を使用し、対象電圧を明記しました�
 GitHub公式の公開手順（2026年10月7日確認）：
 https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 
-この納品ではリポジトリ作成・ファイルのpush・公開操作は行っていません。
+公開設定・公開URLでの動作確認は、この説明書の検証範囲に含めていません。実際の配信状態はGitHub Pages側で確認してください。
 
 ## ファイル構成
 
 ```text
-index.html                         完成済みの単一HTML（CSS・JS・ロゴ・3言語内蔵）
+index.html                         完成済みの単一HTML（CSS・JS・ロゴ・9ロケール内蔵）
 .nojekyll                          静的ファイルとして公開するための指定
 README.md                          この説明書
 build.py                           Python標準ライブラリのみの生成スクリプト
 src/index.template.html            画面・CSS・JavaScriptの編集元
-src/translations.json              英語・簡体字中国語のUI翻訳辞書
+src/locales.json                   対応ロケール・表示名・選択順序の共通定義
+src/translations/*.json            日本語以外の8ロケールのUI翻訳辞書
 assets/edelworks_logo_origin.png   提供されたロゴ原本（ビルドでHTMLへ埋め込み）
 prompts/led_solder_review_ja.txt    写真レビュー用プロンプトの編集元
 prompts/led_solder_review_en.txt    英語版プロンプト
-prompts/led_solder_review_zh-CN.txt 簡体字中国語版プロンプト
+prompts/led_solder_review_zh.txt    簡体字中国語版プロンプト
+prompts/led_solder_review_zh-TW.txt 台湾繁体字中国語版プロンプト
+prompts/led_solder_review_es.txt    スペイン語版プロンプト
+prompts/led_solder_review_de.txt    ドイツ語版プロンプト
+prompts/led_solder_review_fr.txt    フランス語版プロンプト
+prompts/led_solder_review_ko.txt    韓国語版プロンプト
+prompts/led_solder_review_pt.txt    ポルトガル語版プロンプト
 tests/check_static.py             ビルドとHTMLの基本チェック
 tests/check_browser.py            Chromiumでの表示・操作チェック
 tests/check_browser_cdp.mjs       Node標準APIのみのChromium表示・操作チェック
@@ -70,7 +91,7 @@ TEST_REPORT.md                     納品時の確認範囲と制限
 
 ## 編集する
 
-プロンプトは `prompts/led_solder_review_*.txt` の各言語版を、画面・スタイル・動作は `src/index.template.html` を変更します。UIの日本語文を変更した場合は `src/translations.json` の原文キーと各訳も合わせて更新し、次を実行します。
+プロンプトは `prompts/led_solder_review_*.txt` の各言語版を、画面・スタイル・動作は `src/index.template.html` を変更します。UIの日本語文を変更した場合は `src/translations/*.json` の原文キーと8ロケールの訳も合わせて更新し、次を実行します。
 
 ```sh
 python build.py
@@ -79,7 +100,7 @@ python tests/check_static.py
 
 `index.html` が更新されます。Python 3.9以降を使用してください。編集後は再生成した `index.html` もコミットしてください。完成HTMLへの直接編集もできますが、次のビルドで上書きされます。
 
-各言語のプロンプト、翻訳辞書、ロゴ画像は `build.py` がHTMLへ埋め込みます。日本語の固定プロンプトは、JavaScript無効時にも読めるテキスト欄へ同じ原本から埋め込むため、手作業で同期する必要はありません。完成HTMLを配布・公開する際に、`assets/` や `src/` を一緒に配信する必要はありません。
+各言語のプロンプト、翻訳辞書、ロケール定義、ロゴ画像は `build.py` がHTMLへ埋め込みます。言語の選択欄も `src/locales.json` から生成するため、画面と内部のロケール一覧を手作業で同期する必要はありません。日本語の固定プロンプトは、JavaScript無効時にも読めるテキスト欄へ同じ原本から埋め込みます。完成HTMLを配布・公開する際に、`assets/` や `src/` を一緒に配信する必要はありません。
 
 ローカルHTTPサーバーで確認する場合：
 
@@ -93,7 +114,7 @@ python -m http.server 8000
 
 コピーはClipboard APIを試し、利用できなければ互換コピーを試します。両方失敗した場合は全文を表示して選択し、手動コピーを案内します。HTTPS公開時でも、ブラウザー・埋め込み先・権限設定によって自動コピーを使えない場合があります。
 
-「テキストで保存」は、入力した状況も含む依頼文をUTF-8（BOM付き）で保存します。ファイル名は選択言語に合わせた `led-solder-review-ja.txt`、`led-solder-review-en.txt`、`led-solder-review-zh-CN.txt` になります。
+「テキストで保存」は、入力した状況も含む依頼文をUTF-8（BOM付き）で保存します。ファイル名は選択言語に合わせた `led-solder-review-<ロケール>.txt` です。例：`led-solder-review-ja.txt`、`led-solder-review-zh.txt`、`led-solder-review-zh-TW.txt`。
 
 JavaScriptが無効な場合も日本語の固定プロンプトの全文は読めますが、言語・テーマの切り替え、状況の自動追記・自動コピー・保存は動作しません。端末設定に応じたダーク配色はJavaScriptなしでも適用されます。
 
@@ -115,7 +136,7 @@ node tests/check_browser_cdp.mjs --screenshots tests/artifacts/cdp
 node tests/check_browser_cdp.mjs --browser "C:/path/to/chrome.exe" --screenshots tests/artifacts/cdp
 ```
 
-CDP版はローカルHTMLをブラウザーへ直接読み込み、3言語・3テーマ・画面幅、コピー経路、ダウンロード、JavaScript無効時の表示を確認します。検証レポート、スクリーンショット、ダウンロードしたテキストを指定先へ保存します。
+CDP版はローカルHTMLをブラウザーへ直接読み込み、9ロケール・3テーマ・7画面幅の189条件、コピー経路、9ロケールのダウンロード、JavaScript無効時の表示を確認します。検証レポート、各ロケールのスクリーンショット、ダウンロードしたテキストを指定先へ保存します。
 
 PythonとPlaywrightを使う場合：
 

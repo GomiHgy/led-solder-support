@@ -8,25 +8,31 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+LOCALES = json.loads((ROOT / 'src' / 'locales.json').read_text(encoding='utf-8'))
+LANGUAGES = tuple(locale['code'] for locale in LOCALES)
 
 
 def build() -> Path:
+    if len(set(LANGUAGES)) != len(LANGUAGES) or not LANGUAGES or LANGUAGES[0] != 'ja':
+        raise ValueError('Expected unique locales with Japanese as the fallback')
     template_path = ROOT / 'src' / 'index.template.html'
     template = template_path.read_text(encoding='utf-8')
     prompts = {}
-    for language in ('ja', 'en', 'zh-CN'):
+    for language in LANGUAGES:
         prompt_path = ROOT / 'prompts' / f'led_solder_review_{language}.txt'
         prompt_text = prompt_path.read_text(encoding='utf-8').strip() + '\n'
         if not prompt_text.startswith('# ') or len(prompt_text) < 1000:
             raise ValueError(f'Unexpected or empty prompt content: {language}')
         prompts[language] = prompt_text
     prompt = prompts['ja']
-    translations = json.loads((ROOT / 'src' / 'translations.json').read_text(encoding='utf-8'))
-    for language in ('en', 'zh-CN'):
-        if not isinstance(translations.get(language), dict) or not translations[language]:
+    translations = {}
+    for language in LANGUAGES[1:]:
+        translation_path = ROOT / 'src' / 'translations' / f'{language}.json'
+        translations[language] = json.loads(translation_path.read_text(encoding='utf-8'))
+        if not isinstance(translations[language], dict) or not translations[language]:
             raise ValueError(f'Missing UI translations: {language}')
     logo = base64.b64encode((ROOT / 'assets' / 'edelworks_logo_origin.png').read_bytes()).decode('ascii')
-    for token in ('@@PROMPT_HTML@@', '@@PROMPT_JSON@@', '@@PROMPTS_JSON@@', '@@TRANSLATIONS_JSON@@', '@@LOGO_DATA@@'):
+    for token in ('@@PROMPT_HTML@@', '@@PROMPT_JSON@@', '@@PROMPTS_JSON@@', '@@TRANSLATIONS_JSON@@', '@@LOGO_DATA@@', '@@LOCALES_JSON@@', '@@LANGUAGE_OPTIONS@@'):
         if template.count(token) != 1:
             raise ValueError(f'Expected exactly one {token} placeholder')
     # Escape embedded script data, including </script>, without changing runtime text.
@@ -40,6 +46,12 @@ def build() -> Path:
     page = page.replace('@@PROMPT_JSON@@', script_json(prompt))
     page = page.replace('@@PROMPTS_JSON@@', script_json(prompts))
     page = page.replace('@@TRANSLATIONS_JSON@@', script_json(translations))
+    page = page.replace('@@LOCALES_JSON@@', script_json(LOCALES))
+    language_options = ''.join(
+        f'<option value="{html.escape(locale["code"], quote=True)}" '
+        f'lang="{html.escape(locale["code"], quote=True)}">{html.escape(locale["name"])}</option>'
+        for locale in LOCALES)
+    page = page.replace('@@LANGUAGE_OPTIONS@@', language_options)
     page = page.replace('@@LOGO_DATA@@', f'data:image/png;base64,{logo}')
     target = ROOT / 'index.html'
     target.write_text(page, encoding='utf-8')
