@@ -185,7 +185,7 @@
   "入力した状況を依頼文に反映しました。変更後の内容をコピーしてください。": "Your context has been added to the prompt. Copy the updated content.",
   "全文を選択しました。Ctrl+C／⌘C、または端末の「コピー」でコピーできます。": "All text is selected. Use Ctrl+C, ⌘C, or your device’s Copy command.",
   "表示言語を切り替えました。依頼文も選んだ言語でコピー・保存できます。": "The display language has changed. You can also copy and save the prompt in the selected language.",
-  "資料確認：2026年10月7日 ／ 写真レビュー用プロンプト：v1.2": "References checked: October 7, 2026 / Photo review prompt: v1.2",
+  "資料確認：2026年10月7日 ／ 写真レビュー用プロンプト：v1.3": "References checked: October 7, 2026 / Photo review prompt: v1.3",
   "JavaScriptが無効のため、言語・テーマの切り替え、コピー・保存・状況の追記は使えません。上の「プロンプト全文を見る」を開き、本文を手動でコピーしてください。作業ガイドはそのまま読めます。": "JavaScript is disabled, so language and theme switching, copying, saving, and adding context are unavailable. Open “View the full prompt” above and copy the text manually. You can still read the work guide.",
   "変更前の内容がコピーされました。現在の内容をもう一度コピーしてください。": "The previous content was copied. Please copy the current content again."
 }

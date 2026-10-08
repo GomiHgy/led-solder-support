@@ -185,7 +185,7 @@
   "入力した状況を依頼文に反映しました。変更後の内容をコピーしてください。": "Sua situação foi adicionada à solicitação. Copie o conteúdo atualizado.",
   "全文を選択しました。Ctrl+C／⌘C、または端末の「コピー」でコピーできます。": "Todo o texto está selecionado. Use Ctrl+C, ⌘C ou a opção «Copiar» do dispositivo.",
   "表示言語を切り替えました。依頼文も選んだ言語でコピー・保存できます。": "O idioma da página foi alterado. Você também pode copiar e salvar a solicitação no idioma selecionado.",
-  "資料確認：2026年10月7日 ／ 写真レビュー用プロンプト：v1.2": "Referências verificadas: 7 de outubro de 2026 / Solicitação de análise de fotos: v1.2",
+  "資料確認：2026年10月7日 ／ 写真レビュー用プロンプト：v1.3": "Referências verificadas: 7 de outubro de 2026 / Solicitação de análise de fotos: v1.3",
   "JavaScriptが無効のため、言語・テーマの切り替え、コピー・保存・状況の追記は使えません。上の「プロンプト全文を見る」を開き、本文を手動でコピーしてください。作業ガイドはそのまま読めます。": "JavaScript está desativado, por isso mudar idioma ou tema, copiar, salvar e adicionar sua situação não estão disponíveis. Abra «Ver a solicitação completa» acima e copie o texto manualmente. Você ainda pode ler o guia de trabalho.",
   "変更前の内容がコピーされました。現在の内容をもう一度コピーしてください。": "O conteúdo anterior foi copiado. Copie o conteúdo atual novamente."
 }
