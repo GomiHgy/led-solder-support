@@ -10,10 +10,10 @@ Windows上のChromium 151.0.7922.34で、Node.jsの標準APIだけを使う `tes
 
 ```sh
 python tests/check_static.py
-node tests/check_browser_cdp.mjs --browser "C:/Users/hfuru/AppData/Local/ms-playwright/chromium-1234/chrome-win64/chrome.exe" --screenshots tests/artifacts/text-header
+node tests/check_browser_cdp.mjs --browser "C:/Users/hfuru/AppData/Local/ms-playwright/chromium-1234/chrome-win64/chrome.exe" --screenshots tests/artifacts/ai-links
 ```
 
-実行結果は `tests/artifacts/text-header/report.json`、スクリーンショット21枚、保存テキスト9ロケール分を同じフォルダーに記録しました。これらの検証生成物はGitの対象外です。
+実行結果は `tests/artifacts/ai-links/report.json`、通常表示のスクリーンショット21枚とAIボタン周辺3枚、保存テキスト9ロケール分を同じフォルダーに記録しました。これらの検証生成物はGitの対象外です。
 
 ## PASS：確認できたこと
 
@@ -24,6 +24,7 @@ node tests/check_browser_cdp.mjs --browser "C:/Users/hfuru/AppData/Local/ms-play
 - 各言語で対象電圧DC 5V・12V・24Vを表示し、製品の定格電圧と一致する電源を使用する説明がある。
 - 「確認が先、絶縁・補強はあと」の順序、未確認情報を確認済みにしないルールを維持する。全9プロンプトで0〜9節・88箇条書き・5対話手順がそろう。
 - 全9プロンプトのE節に、切断端の欠けたDと隣の区画の完全な印字の照合、WS2812B／SK6812の典型配置を候補として扱う条件、DIN／DOUTの分離、不要な配線交換の回避を反映したことを原文・翻訳の読解で確認した。これはAI返答の正答確認ではない。
+- 依頼文の下にChatGPT・Claude・Gemini・DeepSeek・Grokの5リンクを配置した。リンク先URL、新しいタブで開く指定、全9言語の表示をソースと翻訳辞書で確認した。外部サービス上での貼り付け・写真送信は未実施。
 - 9ロケール×3テーマ×7画面幅（320・375・390・650・768・1024・1440px）の189条件で横方向のはみ出しがない。
 - 自動テーマが端末のライト／ダーク設定に追従し、手動選択が優先され、印刷時はライト配色になる。
 - 追加6ロケールのスマートフォン幅、長い見出しを持つドイツ語・フランス語のPC表示は2026-10-07に目視確認済み。韓国語の単語途中の改行を防ぐルールをv1.3でも維持し、今回の189条件で再検証した。
@@ -35,7 +36,7 @@ node tests/check_browser_cdp.mjs --browser "C:/Users/hfuru/AppData/Local/ms-play
 - コピー処理中に言語や入力が変わった場合、変更前の内容がコピーされたことと再コピーの必要性を案内する。
 - プレビュー開閉・全文選択・状態表示・参考資料欄へのリンクが動作する。
 - JavaScript無効でも日本語の固定プロンプト・文字タイトル・端末設定に応じたダーク配色が残り、横方向のはみ出しがない。
-- HTMLの重複ID・リンク先欠落・入力ラベル欠落・翻訳辞書の欠落・外部アセット依存がない。8辞書各189キーと、実行時の日本語32キーを静的に照合する。
+- HTMLの重複ID・リンク先欠落・入力ラベル欠落・翻訳辞書の欠落・外部アセット依存がない。8辞書各196キーと、実行時の日本語32キーを静的に照合する。
 - 新しい未翻訳の実行時キーを加える変異で、全8辞書の翻訳欠落を静的チェックが検出することを2026-10-07に確認済み。今回は版表示の原文キーと全8訳の一致を通常の静的チェックで確認した。
 - 未処理JavaScript例外、アプリによるHTTP(S)通信がない。
 - `git diff --check` とPythonテストファイルの構文確認に問題がない。

@@ -227,6 +227,9 @@
     #prompt-count { color: var(--muted); font-size: 10px; }
     #prompt-output { height: 285px; resize: vertical; font: 12px/1.9 ui-monospace, "Noto Sans Mono CJK JP", "Yu Gothic", monospace; background: var(--preview-bg); overflow-wrap: anywhere; }
     .select-button { border: 0; background: transparent; color: var(--green); text-decoration: underline; text-underline-offset: 3px; padding: 10px 0 0; font-size: 12px; min-height: 35px; }
+    .ai-launch { margin-top: 20px; }
+    .ai-services { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+    .ai-services .btn { padding: 10px 8px; font-size: 12px; min-width: 0; }
     .consult-limit { display: flex; gap: 9px; color: var(--quiet-text); font-size: 12px; margin-top: 23px; }
     .consult-limit .icon { width: 17px; height: 17px; margin-top: 3px; }
     .finish-header-note { background: var(--amber-bg); border-left: 3px solid #bd995f; border-radius: 0 8px 8px 0; padding: 14px 17px; color: var(--amber); font-size: 13px; margin-bottom: 21px; }
@@ -255,6 +258,7 @@
       .header-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 16px; }
       .display-settings { grid-column: 1 / -1; justify-self: end; }
       .wrap { width: min(760px, calc(100% - 44px)); }
+      .ai-services { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .hero { gap: 28px; padding-top: 40px; grid-template-columns: 1.12fr 1fr; }
       h1 { font-size: 36px; }
       .key-card { padding: 24px; }
@@ -283,6 +287,7 @@
       .display-settings { justify-self: stretch; gap: 12px; }
       .display-settings > div { flex: 1; min-width: 0; }
       #language-select, #theme-select { width: 100%; }
+      .ai-services { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .hero { display: block; padding-top: 31px; padding-bottom: 24px; }
       .eyebrow { font-size: 10px; gap: 7px; margin-bottom: 14px; letter-spacing: .02em; }
       h1 { font-size: clamp(32px, 9vw, 45px); line-height: 1.5; }
@@ -344,6 +349,7 @@
     @media (max-width: 350px) {
       .wrap { width: calc(100% - 28px); }
       .tips-grid { grid-template-columns: 1fr; }
+      .ai-services { grid-template-columns: 1fr; }
       .hero-actions { align-items: flex-start; flex-direction: column; }
       .key-heading { font-size: 21px; }
       .secondary-actions { grid-template-columns: 1fr; }
@@ -485,6 +491,7 @@
           <p class="privacy-note"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span>このページから入力内容や写真を送信することはありません。AIへの貼り付け・写真送信は、自分で行います。</span></p>
         </div>
       </div>
+      <div class="ai-launch"><p class="field-hint">依頼文をコピーしてから、使うAIを開いて貼り付け、写真を添えて送信してください。</p><nav class="ai-services" aria-label="AIを開く"><a class="btn btn-secondary" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer"><span>ChatGPTを開く</span><span aria-hidden="true">↗</span></a><a class="btn btn-secondary" href="https://claude.ai/" target="_blank" rel="noopener noreferrer"><span>Claudeを開く</span><span aria-hidden="true">↗</span></a><a class="btn btn-secondary" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer"><span>Geminiを開く</span><span aria-hidden="true">↗</span></a><a class="btn btn-secondary" href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer"><span>DeepSeekを開く</span><span aria-hidden="true">↗</span></a><a class="btn btn-secondary" href="https://grok.com/" target="_blank" rel="noopener noreferrer"><span>Grokを開く</span><span aria-hidden="true">↗</span></a></nav></div>
       <p class="consult-limit"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>ここでは写真のアップロードやAI判定は行いません。AIの返答は確認の手がかりであり、「通電して安全」という判定ではありません。</span></p>
       <noscript><p>JavaScriptが無効のため、言語・テーマの切り替え、コピー・保存・状況の追記は使えません。上の「プロンプト全文を見る」を開き、本文を手動でコピーしてください。作業ガイドはそのまま読めます。</p></noscript>
     </section>

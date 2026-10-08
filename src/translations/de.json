@@ -187,5 +187,12 @@
   "表示言語を切り替えました。依頼文も選んだ言語でコピー・保存できます。": "Die Anzeigesprache wurde geändert. Du kannst den Prompt auch in der ausgewählten Sprache kopieren und speichern.",
   "資料確認：2026年10月7日 ／ 写真レビュー用プロンプト：v1.3": "Quellen geprüft: 7. Oktober 2026 / Fotoprüfungs-Prompt: v1.3",
   "JavaScriptが無効のため、言語・テーマの切り替え、コピー・保存・状況の追記は使えません。上の「プロンプト全文を見る」を開き、本文を手動でコピーしてください。作業ガイドはそのまま読めます。": "JavaScript ist deaktiviert. Sprach- und Darstellungswechsel, Kopieren, Speichern und das Ergänzen deiner Situation sind daher nicht verfügbar. Öffne oben „Vollständigen Prompt ansehen“ und kopiere den Text manuell. Die Arbeitsanleitung kannst du weiterhin lesen.",
-  "変更前の内容がコピーされました。現在の内容をもう一度コピーしてください。": "Der vorherige Inhalt wurde kopiert. Kopiere den aktuellen Inhalt erneut."
+  "変更前の内容がコピーされました。現在の内容をもう一度コピーしてください。": "Der vorherige Inhalt wurde kopiert. Kopiere den aktuellen Inhalt erneut.",
+  "AIを開く": "KI öffnen",
+  "ChatGPTを開く": "ChatGPT öffnen",
+  "Claudeを開く": "Claude öffnen",
+  "Geminiを開く": "Gemini öffnen",
+  "DeepSeekを開く": "DeepSeek öffnen",
+  "Grokを開く": "Grok öffnen",
+  "依頼文をコピーしてから、使うAIを開いて貼り付け、写真を添えて送信してください。": "Kopiere den Auftrag, öffne die gewünschte KI, füge den Text ein, hänge dein Foto an und sende die Nachricht."
 }
