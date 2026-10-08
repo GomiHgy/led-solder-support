@@ -10,16 +10,16 @@ Windows上のChromium 151.0.7922.34で、Node.jsの標準APIだけを使う `tes
 
 ```sh
 python tests/check_static.py
-node tests/check_browser_cdp.mjs --browser "C:/Users/hfuru/AppData/Local/ms-playwright/chromium-1234/chrome-win64/chrome.exe" --screenshots tests/artifacts/terminal-labels-v1.3
+node tests/check_browser_cdp.mjs --browser "C:/Users/hfuru/AppData/Local/ms-playwright/chromium-1234/chrome-win64/chrome.exe" --screenshots tests/artifacts/text-header
 ```
 
-実行結果は `tests/artifacts/terminal-labels-v1.3/report.json`、スクリーンショット21枚、保存テキスト9ロケール分を同じフォルダーに記録しました。これらの検証生成物はGitの対象外です。
+実行結果は `tests/artifacts/text-header/report.json`、スクリーンショット21枚、保存テキスト9ロケール分を同じフォルダーに記録しました。これらの検証生成物はGitの対象外です。
 
 ## PASS：確認できたこと
 
 - 指定された `ja / en / zh / zh-TW / es / de / fr / ko / pt` の9ロケールが選択順序まで一致する。
 - 生成済みHTMLと編集元が一致し、9ロケールのプロンプト・8ロケールの翻訳辞書が原本と一致する。
-- ヘッダーのロゴ画像が正常に表示され、HTML内の画像データが提供されたPNG原本とバイト単位で一致する。
+- 左上に「フルカラーLEDテープ はんだ付けサポート」の文字タイトルを表示し、全9ロケールで翻訳が切り替わる。ロゴ画像をHTMLへ埋め込まない。
 - 9ロケールの画面、タイトル、説明文、入力ラベル、プレースホルダー、操作通知、コピー・保存用プロンプトが切り替わる。
 - 各言語で対象電圧DC 5V・12V・24Vを表示し、製品の定格電圧と一致する電源を使用する説明がある。
 - 「確認が先、絶縁・補強はあと」の順序、未確認情報を確認済みにしないルールを維持する。全9プロンプトで0〜9節・88箇条書き・5対話手順がそろう。
@@ -34,7 +34,7 @@ node tests/check_browser_cdp.mjs --browser "C:/Users/hfuru/AppData/Local/ms-play
 - クリップボードAPI成功、拒否後の互換コピー、両方拒否時の全文選択と手動コピー案内を、APIを置き換えて確認した。
 - コピー処理中に言語や入力が変わった場合、変更前の内容がコピーされたことと再コピーの必要性を案内する。
 - プレビュー開閉・全文選択・状態表示・参考資料欄へのリンクが動作する。
-- JavaScript無効でも日本語の固定プロンプト・ロゴ・端末設定に応じたダーク配色が残り、横方向のはみ出しがない。
+- JavaScript無効でも日本語の固定プロンプト・文字タイトル・端末設定に応じたダーク配色が残り、横方向のはみ出しがない。
 - HTMLの重複ID・リンク先欠落・入力ラベル欠落・翻訳辞書の欠落・外部アセット依存がない。8辞書各189キーと、実行時の日本語32キーを静的に照合する。
 - 新しい未翻訳の実行時キーを加える変異で、全8辞書の翻訳欠落を静的チェックが検出することを2026-10-07に確認済み。今回は版表示の原文キーと全8訳の一致を通常の静的チェックで確認した。
 - 未処理JavaScript例外、アプリによるHTTP(S)通信がない。

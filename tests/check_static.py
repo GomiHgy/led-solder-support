@@ -3,7 +3,6 @@
 from __future__ import annotations
 import ast
 import html
-import base64
 import json
 import re
 import sys
@@ -28,7 +27,6 @@ class PageParser(HTMLParser):
         self.inputs: list[str] = []
         self.stack: list[tuple[str, dict[str, str | None]]] = []
         self.translation_keys: set[str] = set()
-        self.logo_sources: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         a = dict(attrs)
@@ -50,10 +48,7 @@ class PageParser(HTMLParser):
         if href.startswith('#'):
             self.anchors.append(href[1:])
         if tag in ('script', 'img', 'iframe') and a.get('src'):
-            if not (tag == 'img' and a['src'].startswith('data:image/png;base64,')):
-                self.external_assets.append(a['src'])
-        if tag == 'img' and 'brand-logo' in (a.get('class', '') or '').split():
-            self.logo_sources.append(a.get('src', '') or '')
+            self.external_assets.append(a['src'])
         if tag == 'link' and a.get('rel') == 'stylesheet':
             self.external_assets.append(href)
 
@@ -129,14 +124,10 @@ def main() -> None:
         assert f'led-solder-review-{language}-1.3' in prompts[language], f'Wrong prompt locale: {language}'
         assert len(re.findall(r'^- ', prompts[language], re.M)) == len(re.findall(r'^- ', prompt, re.M)), f'Missing prompt rules: {language}'
         assert re.findall(r'^## (\d+)\.', prompts[language], re.M) == re.findall(r'^## (\d+)\.', prompt, re.M), f'Missing prompt sections: {language}'
-    assert len(parser.logo_sources) == 1, 'Expected one embedded EdelWorks logo'
-    prefix = 'data:image/png;base64,'
-    assert parser.logo_sources[0].startswith(prefix)
-    assert base64.b64decode(parser.logo_sources[0][len(prefix):], validate=True) == (ROOT / 'assets/edelworks_logo_origin.png').read_bytes(), 'Logo does not match the supplied original'
     assert re.search(r'<html\b[^>]*\blang="ja"', page), 'Expected Japanese fallback language'
     assert 'theme-select' in parser.ids and 'language-select' in parser.ids
     assert 'localStorage.' not in page and 'fetch(' not in page and 'XMLHttpRequest' not in page
-    print('PASS: requested nine locales, build/prompt/translation sync, complete UI and prompt rule coverage, original logo bytes, safety rules, fragment links, form labels, and no external assets.')
+    print('PASS: requested nine locales, build/prompt/translation sync, complete UI and prompt rule coverage, safety rules, fragment links, form labels, and no external assets.')
 
 
 if __name__ == '__main__':

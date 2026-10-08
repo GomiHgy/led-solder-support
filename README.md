@@ -48,7 +48,7 @@ WS2812B系・SK6812系の一般的な5V・3パッドのテープでは、GND–�
 
 ### 維持している機能と確認順序
 
-EdelWorksの提供ロゴ原本を使用し、対象電圧を明記しました。ダークモードと9ロケールの切り替えに対応しています。各言語のプロンプトは同じ確認手順・安全ルールを維持し、選択した言語でAIへ返答を依頼します。
+サイト左上は「フルカラーLEDテープ はんだ付けサポート」の文字タイトルです。各ロケールで翻訳し、対象電圧を明記しています。ダークモードと9ロケールの切り替えに対応しています。各言語のプロンプトは同じ確認手順・安全ルールを維持し、選択した言語でAIへ返答を依頼します。
 
 熱収縮チューブ・接着剤・樹脂・テープなどで接合部を覆うのは、写真での外観確認と必要な修正のあとです。補強前の写真を接合不良と判定したり、「先にチューブで覆ってから撮影」と誘導したりしないルールを最優先で追加しました。
 
@@ -76,14 +76,14 @@ https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a
 ## ファイル構成
 
 ```text
-index.html                         完成済みの単一HTML（CSS・JS・ロゴ・9ロケール内蔵）
+index.html                         完成済みの単一HTML（CSS・JS・9ロケール内蔵）
 .nojekyll                          静的ファイルとして公開するための指定
 README.md                          この説明書
 build.py                           Python標準ライブラリのみの生成スクリプト
 src/index.template.html            画面・CSS・JavaScriptの編集元
 src/locales.json                   対応ロケール・表示名・選択順序の共通定義
 src/translations/*.json            日本語以外の8ロケールのUI翻訳辞書
-assets/edelworks_logo_origin.png   提供されたロゴ原本（ビルドでHTMLへ埋め込み）
+assets/edelworks_logo_origin.png   提供されたロゴ原本（保管用、現在は画面で未使用）
 prompts/led_solder_review_ja.txt    写真レビュー用プロンプトの編集元
 prompts/led_solder_review_en.txt    英語版プロンプト
 prompts/led_solder_review_zh.txt    簡体字中国語版プロンプト
@@ -111,7 +111,7 @@ python tests/check_static.py
 
 `index.html` が更新されます。Python 3.9以降を使用してください。編集後は再生成した `index.html` もコミットしてください。完成HTMLへの直接編集もできますが、次のビルドで上書きされます。
 
-各言語のプロンプト、翻訳辞書、ロケール定義、ロゴ画像は `build.py` がHTMLへ埋め込みます。言語の選択欄も `src/locales.json` から生成するため、画面と内部のロケール一覧を手作業で同期する必要はありません。日本語の固定プロンプトは、JavaScript無効時にも読めるテキスト欄へ同じ原本から埋め込みます。完成HTMLを配布・公開する際に、`assets/` や `src/` を一緒に配信する必要はありません。
+各言語のプロンプト、翻訳辞書、ロケール定義は `build.py` がHTMLへ埋め込みます。言語の選択欄も `src/locales.json` から生成するため、画面と内部のロケール一覧を手作業で同期する必要はありません。日本語の固定プロンプトは、JavaScript無効時にも読めるテキスト欄へ同じ原本から埋め込みます。完成HTMLを配布・公開する際に、`assets/` や `src/` を一緒に配信する必要はありません。
 
 ローカルHTTPサーバーで確認する場合：
 

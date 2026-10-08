@@ -123,17 +123,18 @@ try {
   await browser.load(page);
   assert.deepEqual(await evaluate("[document.getElementById('language-select').value,document.getElementById('theme-select').value]"), ['ja', 'auto']);
   assert.deepEqual(await evaluate("Array.from(document.getElementById('language-select').options, option => ({code:option.value,name:option.textContent}))"), locales);
-  assert.ok(await evaluate("document.querySelector('.brand-logo').complete&&document.querySelector('.brand-logo').naturalWidth>0"));
+  assert.equal(await evaluate("document.querySelector('.brand').textContent"), 'フルカラーLEDテープ はんだ付けサポート');
   const initial = await output();
   assert.ok(initial.length > 7000 && initial.includes('未記入。実際の作業状況は未確認') && initial.includes('このWebページでは確認していません'));
   assert.equal(await evaluate("document.getElementById('prompt-preview').open"), false);
   const original = await evaluate("({description:document.querySelector('meta[name=description]').content,placeholder:document.getElementById('product').placeholder})");
   await screenshot('desktop-ja-light.png');
-  checks.push('Original embedded logo, Japanese/auto defaults, full prompt and unverified initial state');
+  checks.push('Text site title, Japanese/auto defaults, full prompt and unverified initial state');
   for (const language of languages) {
     await select('language-select', language);
     const state = await evaluate("({lang:document.documentElement.lang,title:document.title,description:document.querySelector('meta[name=description]').content,placeholder:document.getElementById('product').placeholder,label:document.querySelector('label[for=led-type]').textContent,scope:document.querySelector('.scope-note').textContent})");
     assert.equal(state.lang, language);
+    assert.equal(await evaluate("document.querySelector('.brand').textContent"), tr('フルカラーLEDテープ はんだ付けサポート', language));
     assert.equal(await evaluate("document.getElementById('prompt-language').textContent"), locales.find(locale => locale.code === language).name);
     assert.equal(state.title, tr('LEDテープ はんだ付けサポート | EdelWorks', language));
     assert.equal(state.description, tr(original.description, language));
@@ -268,10 +269,10 @@ try {
   assert.ok(await browser.evaluate("document.querySelector('noscript').getBoundingClientRect().height>0", nojs));
   assert.equal(await browser.evaluate('getComputedStyle(document.body).backgroundColor', nojs), dark);
   assert.equal(await browser.evaluate('document.documentElement.scrollWidth>innerWidth', nojs), false);
-  assert.ok(await browser.evaluate("document.querySelector('.brand-logo').naturalWidth>0", nojs));
+  assert.equal(await browser.evaluate("document.querySelector('.brand').textContent", nojs), 'フルカラーLEDテープ はんだ付けサポート');
   assert.deepEqual(browser.events.filter(e => e.method === 'Runtime.exceptionThrown'), []);
   assert.deepEqual(browser.events.filter(e => e.method === 'Network.requestWillBeSent' && /^https?:/.test(e.params.request.url)), []);
-  checks.push('No-JS Japanese prompt, logo, dark OS theme and no overflow; no uncaught JavaScript errors or HTTP(S) requests');
+  checks.push('No-JS Japanese prompt, text site title, dark OS theme and no overflow; no uncaught JavaScript errors or HTTP(S) requests');
   const report = { status: 'PASS', browser: version.product, load_mode: 'direct document over CDP pipe', checks,
     limitations: ['Python Playwright test not executed by this script', 'Clipboard APIs mocked; OS clipboard not tested', 'Physical mobile devices not tested', 'AI photo-assessment quality not tested', 'Hosted deployment not tested'] };
   await fs.writeFile(path.join(artifacts, 'report.json'), JSON.stringify(report, null, 2) + '\n');

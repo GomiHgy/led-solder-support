@@ -2,7 +2,6 @@
 """Build a self-contained HTML page. Python 3.9+, standard library only."""
 from __future__ import annotations
 
-import base64
 import html
 import json
 from pathlib import Path
@@ -31,8 +30,7 @@ def build() -> Path:
         translations[language] = json.loads(translation_path.read_text(encoding='utf-8'))
         if not isinstance(translations[language], dict) or not translations[language]:
             raise ValueError(f'Missing UI translations: {language}')
-    logo = base64.b64encode((ROOT / 'assets' / 'edelworks_logo_origin.png').read_bytes()).decode('ascii')
-    for token in ('@@PROMPT_HTML@@', '@@PROMPT_JSON@@', '@@PROMPTS_JSON@@', '@@TRANSLATIONS_JSON@@', '@@LOGO_DATA@@', '@@LOCALES_JSON@@', '@@LANGUAGE_OPTIONS@@'):
+    for token in ('@@PROMPT_HTML@@', '@@PROMPT_JSON@@', '@@PROMPTS_JSON@@', '@@TRANSLATIONS_JSON@@', '@@LOCALES_JSON@@', '@@LANGUAGE_OPTIONS@@'):
         if template.count(token) != 1:
             raise ValueError(f'Expected exactly one {token} placeholder')
     # Escape embedded script data, including </script>, without changing runtime text.
@@ -52,7 +50,6 @@ def build() -> Path:
         f'lang="{html.escape(locale["code"], quote=True)}">{html.escape(locale["name"])}</option>'
         for locale in LOCALES)
     page = page.replace('@@LANGUAGE_OPTIONS@@', language_options)
-    page = page.replace('@@LOGO_DATA@@', f'data:image/png;base64,{logo}')
     target = ROOT / 'index.html'
     target.write_text(page, encoding='utf-8')
     (ROOT / '.nojekyll').touch()

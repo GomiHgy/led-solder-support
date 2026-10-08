@@ -70,9 +70,8 @@ def main() -> None:
         assert page.locator('#language-select').input_value() == 'ja'
         assert page.locator('#theme-select').input_value() == 'auto'
         assert page.locator('html').get_attribute('data-theme') == 'auto'
-        page.wait_for_function("document.querySelector('.brand-logo').complete && document.querySelector('.brand-logo').naturalWidth > 0")
-        assert page.locator('.brand-logo').is_visible()
-        reports.append('Supplied embedded logo loads, with Japanese and automatic theme defaults')
+        assert page.locator('.brand').inner_text() == 'フルカラーLEDテープ はんだ付けサポート'
+        reports.append('Text site title displays, with Japanese and automatic theme defaults')
         initial = page.locator('#prompt-output').input_value()
         assert len(initial) > 7000
         assert '未記入。実際の作業状況は未確認' in initial
