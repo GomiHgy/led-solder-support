@@ -121,7 +121,7 @@ def main() -> None:
         assert not missing, f'Missing {language} translations: {missing}'
         assert all(isinstance(value, str) and value.strip() for value in translations[language].values()), f'Empty {language} translation'
         assert set(translations[language]) == source_keys, f'Inconsistent UI translation keys: {language}'
-        assert f'led-solder-review-{language}-1.3' in prompts[language], f'Wrong prompt locale: {language}'
+        assert f'led-solder-review-{language}-1.4' in prompts[language], f'Wrong prompt locale: {language}'
         assert len(re.findall(r'^- ', prompts[language], re.M)) == len(re.findall(r'^- ', prompt, re.M)), f'Missing prompt rules: {language}'
         assert re.findall(r'^## (\d+)\.', prompts[language], re.M) == re.findall(r'^## (\d+)\.', prompt, re.M), f'Missing prompt sections: {language}'
     assert re.search(r'<html\b[^>]*\blang="ja"', page), 'Expected Japanese fallback language'
